@@ -9,7 +9,15 @@ download_and_replace() {
 
   echo "[INFO] Downloading $url -> $target"
 
-  if wget --progress=dot:giga --tries=3 -O "$tmp" "$url"; then
+  if curl \
+    --fail \
+    --location \
+    --retry 3 \
+    --retry-delay 2 \
+    --show-error \
+    --output "$tmp" \
+    "$url"; then
+
     echo "[OK] Download successful, replacing $target"
     mv -f "$tmp" "$target"
     echo "[OK] Updated $target"
@@ -22,8 +30,9 @@ download_and_replace() {
 
 download_and_replace \
   "https://cra.circl.lu/opendata/geo-open/mmdb-country/latest.mmdb" \
-  "GeoOpen-Country.mmdb"
+  "db/GeoOpen-Country.mmdb"
 
 download_and_replace \
   "https://cra.circl.lu/opendata/geo-open/mmdb-country-asn/latest.mmdb" \
-  "GeoOpen-Country-ASN.mmdb"
+  "db/GeoOpen-Country-ASN.mmdb"
+
